@@ -1,9 +1,20 @@
 <?php
 /**
+ * Multilingual VG WORT
+ *
+ * @package 2ndkauboy/campaign-archive-block-for-mailchimp
+ * @author  Bernhard Kau
+ * @license GPLv3
+ *
  * Plugin Name: Multilingual VG WORT
+ * Plugin URI: https://github.com/2ndkauboy/multilingual-vg-wort
  * Description: Adds a VG WORT pixel from the German site to connected sites in other languages.
  * Version: 0.1.1
+ * Author: Bernhard Kau
+ * Author URI: https://kau-boys.com
  * Requires Plugins: multilingualpress
+ * License: GPLv3
+ * License URI: http://www.gnu.org/licenses/gpl-3.0.txt
  * GitHub Plugin URI: 2ndkauboy/multilingual-vg-wort
  * Primary Branch: develop
  */
