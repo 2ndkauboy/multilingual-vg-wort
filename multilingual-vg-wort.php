@@ -9,7 +9,7 @@
  * Plugin Name: Multilingual VG WORT
  * Plugin URI: https://github.com/2ndkauboy/multilingual-vg-wort
  * Description: Adds a VG WORT pixel from the German site to connected sites in other languages.
- * Version: 0.1.1
+ * Version: 0.2.0
  * Author: Bernhard Kau
  * Author URI: https://kau-boys.com
  * Requires Plugins: multilingualpress
@@ -19,22 +19,33 @@
  * Primary Branch: develop
  */
 
+/**
+ * Print out VG WORT pixel in the footer
+ *
+ * @return void
+ */
 function multilingual_vg_wort_footer() {
-	/** @var \Inpsyde\MultilingualPress\Framework\Api\Translation $base_post */
 	$base_post = multilingual_vg_wort_find_base_post();
 
 	require_once plugin_dir_path( __FILE__ ) . '/../wp-worthy/class-wp-worthy-pixel.php';
 
 	switch_to_blog( $base_post->remoteSiteId() );
-	$vgw_pixel = wp_worthy_pixel::getPixelForPost( $base_post->remoteContentId() );
+	$wp_worthy_pixel = wp_worthy_pixel::getPixelForPost( $base_post->remoteContentId() );
 
-	echo multilingual_vg_wort_wp_worthy_pixel( $vgw_pixel );
+	if ( $wp_worthy_pixel ) {
+		echo multilingual_vg_wort_wp_worthy_pixel_markup( $wp_worthy_pixel ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
 
 	restore_current_blog();
 }
 
 add_action( 'wp_footer', 'multilingual_vg_wort_footer' );
 
+/**
+ * Get German base post that potentially stores the VG WORT pixel
+ *
+ * @return false|\Inpsyde\MultilingualPress\Framework\Api\Translation
+ */
 function multilingual_vg_wort_find_base_post() {
 	$args = \Inpsyde\MultilingualPress\Framework\Api\TranslationSearchArgs::forContext(
 		new \Inpsyde\MultilingualPress\Framework\WordpressContext()
@@ -43,7 +54,6 @@ function multilingual_vg_wort_find_base_post() {
 	$translations = \Inpsyde\MultilingualPress\resolve(
 		\Inpsyde\MultilingualPress\Framework\Api\Translations::class
 	)->searchTranslations( $args );
-
 
 	foreach ( $translations as $translation ) {
 		if ( $translation->language()->isoCode() === 'de' ) {
@@ -54,13 +64,18 @@ function multilingual_vg_wort_find_base_post() {
 	return false;
 }
 
-function multilingual_vg_wort_wp_worthy_pixel( $vgw_pixel ) {
-	$imageClasses = [ 'wp-worthy-pixel-img', 'skip-lazy' ];
-
-	$imageElement =
+/**
+ * Get the Worthy pixel HTML string
+ *
+ * @param wp_worthy_pixel $wp_worthy_pixel The Worthy pixel object.
+ *
+ * @return string
+ */
+function multilingual_vg_wort_wp_worthy_pixel_markup( $wp_worthy_pixel ) {
+	$image_element =
 		'<img ' .
-		'class="' . esc_attr( implode( ' ', $imageClasses ) ) . '" ' .
-		'src="' . esc_attr( $vgw_pixel->url ) . '" ' .
+		'class="wp-worthy-pixel-img skip-lazy" ' .
+		'src="' . esc_attr( $wp_worthy_pixel->url ) . '" ' .
 		'loading="eager" ' .
 		'data-no-lazy="1" data-skip-lazy="1" ' .
 		'height="1" ' .
@@ -68,5 +83,5 @@ function multilingual_vg_wort_wp_worthy_pixel( $vgw_pixel ) {
 		'alt="" ' .
 		'/>';
 
-	return '<div id="wp-worthy-pixel">' . $imageElement . '</div>';
+	return '<div id="wp-worthy-pixel">' . $image_element . '</div>';
 }
