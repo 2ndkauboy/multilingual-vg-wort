@@ -2,6 +2,7 @@
 /**
  * Plugin Name: Multilingual VG WORT
  * Description: Adds a VG WORT pixel from the German site to connected sites in other languages.
+ * Version: 0.1.0
  * Requires Plugins: multilingualpress, wp-worthy
  * GitHub Plugin URI: 2ndkauboy/multilingual-vg-wort
  */
