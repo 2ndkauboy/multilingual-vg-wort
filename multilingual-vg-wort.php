@@ -5,6 +5,7 @@
  * Version: 0.1.0
  * Requires Plugins: multilingualpress, wp-worthy
  * GitHub Plugin URI: 2ndkauboy/multilingual-vg-wort
+ * Primary Branch: develop
  */
 
 function multilingual_vg_wort_footer() {
