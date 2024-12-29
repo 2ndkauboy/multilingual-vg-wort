@@ -20,14 +20,34 @@
  */
 
 /**
+ * Initialize the plugin
+ *
+ * @return void
+ */
+function multilingual_vg_wort_init() {
+	add_action( 'wp_footer', 'multilingual_vg_wort_footer' );
+}
+
+add_action( 'init', 'multilingual_vg_wort_init' );
+
+/**
  * Print out VG WORT pixel in the footer
  *
  * @return void
  */
 function multilingual_vg_wort_footer() {
-	$base_post = multilingual_vg_wort_find_base_post();
+	if ( ! class_exists( \Inpsyde\MultilingualPress\Framework\Api\TranslationSearchArgs::class ) ) {
+		return;
+	}
 
-	require_once plugin_dir_path( __FILE__ ) . '/../wp-worthy/class-wp-worthy-pixel.php';
+	$wp_worthy_plugin_file = plugin_dir_path( __FILE__ ) . '../wp-worthy/class-wp-worthy-pixel.php';
+	if ( ! file_exists( $wp_worthy_plugin_file ) ) {
+		return;
+	}
+
+	require_once $wp_worthy_plugin_file;
+
+	$base_post = multilingual_vg_wort_find_base_post();
 
 	switch_to_blog( $base_post->remoteSiteId() );
 	$wp_worthy_pixel = wp_worthy_pixel::getPixelForPost( $base_post->remoteContentId() );
@@ -38,8 +58,6 @@ function multilingual_vg_wort_footer() {
 
 	restore_current_blog();
 }
-
-add_action( 'wp_footer', 'multilingual_vg_wort_footer' );
 
 /**
  * Get German base post that potentially stores the VG WORT pixel
