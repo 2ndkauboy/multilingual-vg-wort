@@ -9,7 +9,7 @@
  * Plugin Name: Multilingual VG WORT
  * Plugin URI: https://github.com/2ndkauboy/multilingual-vg-wort
  * Description: Adds a VG WORT pixel from the German site to connected sites in other languages.
- * Version: 0.2.0
+ * Version: 0.3.0
  * Author: Bernhard Kau
  * Author URI: https://kau-boys.com
  * Requires Plugins: multilingualpress
@@ -90,10 +90,11 @@ function multilingual_vg_wort_find_base_post() {
  * @return string
  */
 function multilingual_vg_wort_wp_worthy_pixel_markup( $wp_worthy_pixel ) {
+	$url = preg_replace( '#http:#', 'https:', $wp_worthy_pixel->url );
 	$image_element =
 		'<img ' .
 		'class="wp-worthy-pixel-img skip-lazy" ' .
-		'src="' . esc_attr( $wp_worthy_pixel->url ) . '" ' .
+		'src="' . esc_attr( $url ) . '" ' .
 		'loading="eager" ' .
 		'data-no-lazy="1" data-skip-lazy="1" ' .
 		'height="1" ' .
